@@ -17,8 +17,8 @@ RUN --mount=type=cache,target=/var/cache/apk \
         python3 py3-pip nodejs npm curl wget
 
 # Copy sources and build script
-COPY kernel.config ./kernel.config
-COPY build_kernel.sh /usr/local/bin/build_kernel.sh
+COPY arianna-core/kernel.config ./kernel.config
+COPY arianna-core/build_kernel.sh /usr/local/bin/build_kernel.sh
 
 # Build kernel and clean up build dependencies
 RUN chmod +x /usr/local/bin/build_kernel.sh && \
@@ -39,8 +39,8 @@ RUN --mount=type=cache,target=/var/cache/apk \
 COPY --from=build /root/core /arianna_core/core
 COPY --from=build /root/modules /arianna_core/modules
 COPY --from=build /usr/local/bin/build_kernel.sh /usr/local/bin/build_kernel.sh
-COPY cmd /arianna_core/cmd
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY arianna-core/cmd /arianna_core/cmd
+COPY arianna-core/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Directories for custom scripts and logs
 RUN chmod +x /usr/local/bin/build_kernel.sh /usr/local/bin/entrypoint.sh /arianna_core/cmd/* && \
