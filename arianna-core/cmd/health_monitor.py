@@ -21,6 +21,8 @@ def cpu_percent():
     idle1, total1 = read_cpu()
     time.sleep(0.5)
     idle2, total2 = read_cpu()
+    if total2 == total1:
+        return 0.0
     return 100.0 * (1.0 - (idle2 - idle1) / (total2 - total1))
 
 
@@ -29,7 +31,11 @@ def mem_info():
     with open("/proc/meminfo") as f:
         for line in f:
             k, v = line.split(":")
-            info[k] = v.strip()
+            parts = v.strip().split()
+            value = int(parts[0])
+            if len(parts) > 1 and parts[1] == "kB":
+                value *= 1024
+            info[k] = value
     return info
 
 
@@ -45,6 +51,7 @@ def snapshot():
         "cpu": cpu_percent(),
         "mem": mem_info(),
         "disk": disk_info(),
+        "timestamp": time.time(),
     }
     with open(os.path.join(LOG_DIR, "health.json"), "w") as fh:
         json.dump(data, fh)
