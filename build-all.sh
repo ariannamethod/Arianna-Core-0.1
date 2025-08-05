@@ -6,36 +6,29 @@ green="$(tput setaf 2)"
 reset="$(tput sgr0)"
 
 build_with_status () {
-  tag="$1"
+  version="$1"
+  tag="$2"
 
-  printf "${b}Building ${tag} ... "
-  docker build . -t $tag &> /dev/null
-  if [[ $? -ne 0 ]]; then
-    printf "\n${bold}${red}BUILD FAILED${reset}"
+  printf '%sBuilding %s ... ' "$bold" "$tag"
+  if ! docker build "$version" -t "$tag"; then
+    printf '\n%s%sBUILD FAILED%s' "$bold" "$red" "$reset"
     exit 1
   fi
 
-  echo 'print("something")' | docker run --rm -i $tag &> /dev/null
-  if [[ $? -ne 0 ]]; then
-    printf "${bold}${red}TEST FAILED${reset}"
+  if ! echo 'print("something")' | docker run --rm -i "$tag" &> /dev/null; then
+    printf '%s%sTEST FAILED%s' "$bold" "$red" "$reset"
     exit 1
   else
-    printf "${bold}${green}SUCCESS${reset}"
+    printf '%s%sSUCCESS%s' "$bold" "$green" "$reset"
   fi
   printf "\n"
 }
 
-# quiet versions
-pushd() { builtin pushd $1 > /dev/null; }
-popd() { builtin popd > /dev/null; }
-
 # Move to where the script is
-HERE="$( cd "$(dirname "$0")" ; pwd -P )"
-cd "$HERE"
+HERE="$( cd "$(dirname "$0")" || exit ; pwd -P )"
+cd "$HERE" || exit
 
 # Find all the top-level dirs
-for version in $(find -maxdepth 1 -not -name '.*' -type d -printf '%P\n' | sort); do
-  pushd $version
-  build_with_status $repo:$version
-  popd
+for version in $(find . -maxdepth 1 -not -name '.*' -type d -printf '%P\n' | sort); do
+  build_with_status "$version" "$repo:$version"
 done
