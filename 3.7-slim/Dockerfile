@@ -57,7 +57,7 @@ ENV PYTHON_PATH=/usr/local/bin/ \
     "
 
 # Copy in the entrypoint script -- this installs prerequisites on container start.
-COPY entrypoint.sh /entrypoint.sh
+COPY common-entrypoint.sh /entrypoint.sh
 
 RUN set -ex ;\
     # find MAJOR and MINOR python versions based on $PYTHON_VERSION

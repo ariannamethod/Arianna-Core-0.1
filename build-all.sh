@@ -10,7 +10,7 @@ build_with_status () {
   tag="$2"
 
   printf '%sBuilding %s ... ' "$bold" "$tag"
-  if ! docker build "$version" -t "$tag"; then
+  if ! docker build -f "$version/Dockerfile" -t "$tag" .; then
     printf '\n%s%sBUILD FAILED%s' "$bold" "$red" "$reset"
     exit 1
   fi
