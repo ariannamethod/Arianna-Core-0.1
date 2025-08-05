@@ -3,9 +3,14 @@
 import os
 import time
 import json
+import logging
 
 LOG_DIR = "/arianna_core/log"
 os.makedirs(LOG_DIR, exist_ok=True)
+
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO))
+logger = logging.getLogger(__name__)
 
 
 def read_cpu():
@@ -48,9 +53,15 @@ def snapshot():
     }
     with open(os.path.join(LOG_DIR, "health.json"), "w") as fh:
         json.dump(data, fh)
+        fh.flush()
+        os.fsync(fh.fileno())
+    logger.debug("Health snapshot written: %s", data)
 
 
 if __name__ == "__main__":
     while True:
-        snapshot()
+        try:
+            snapshot()
+        except Exception:  # noqa: BLE001
+            logger.exception("Failed to capture health snapshot")
         time.sleep(60)
