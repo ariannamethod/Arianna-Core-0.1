@@ -1,11 +1,50 @@
 #!/usr/bin/env python3
 """RU: Мониторинг состояния системы и запись логов."""
+import glob
 import os
 import time
 import json
+import logging
+from datetime import datetime, timedelta
 
 LOG_DIR = "/arianna_core/log"
 os.makedirs(LOG_DIR, exist_ok=True)
+
+LOGGER = logging.getLogger("health_monitor")
+LOGGER.setLevel(logging.INFO)
+_current_handler_date = None
+
+
+def _get_log_handler():
+    """Get a file handler that writes to today's log file."""
+    global _current_handler_date
+    date_str = datetime.now().strftime("%Y%m%d")
+    if _current_handler_date != date_str:
+        for h in list(LOGGER.handlers):
+            LOGGER.removeHandler(h)
+            h.close()
+        log_path = os.path.join(LOG_DIR, f"health-{date_str}.json")
+        handler = logging.FileHandler(log_path)
+        handler.setFormatter(logging.Formatter("%(message)s"))
+        LOGGER.addHandler(handler)
+        _current_handler_date = date_str
+
+
+def _cleanup_logs(retention_days: int = 30) -> None:
+    """Remove log files older than retention_days."""
+    cutoff = datetime.now() - timedelta(days=retention_days)
+    pattern = os.path.join(LOG_DIR, "health-*.json")
+    for path in glob.glob(pattern):
+        try:
+            datestr = os.path.basename(path)[7:-5]
+            file_date = datetime.strptime(datestr, "%Y%m%d")
+        except ValueError:
+            continue
+        if file_date < cutoff:
+            try:
+                os.remove(path)
+            except OSError:
+                pass
 
 
 def read_cpu():
@@ -41,13 +80,15 @@ def disk_info(path="/"):
 
 
 def snapshot():
+    """Collect system metrics and append them to today's log file."""
     data = {
         "cpu": cpu_percent(),
         "mem": mem_info(),
         "disk": disk_info(),
     }
-    with open(os.path.join(LOG_DIR, "health.json"), "w") as fh:
-        json.dump(data, fh)
+    _get_log_handler()
+    LOGGER.info(json.dumps(data))
+    _cleanup_logs()
 
 
 if __name__ == "__main__":
