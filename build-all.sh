@@ -1,5 +1,5 @@
 #!/bin/bash
-repo='jfloff/alpine-python'
+repo='jfloff/ariannacore-python'
 bold="$(tput bold)"
 red="$(tput setaf 1)"
 green="$(tput setaf 2)"

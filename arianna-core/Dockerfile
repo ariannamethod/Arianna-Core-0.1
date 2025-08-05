@@ -4,7 +4,7 @@
 ARG KERNEL_VERSION=6.6.32
 
 # Build stage with full toolchain and headers
-FROM alpine:3.20 AS build
+FROM ariannacore:3.20 AS build
 ARG KERNEL_VERSION
 ENV KERNEL_VERSION=${KERNEL_VERSION}
 WORKDIR /root
@@ -26,7 +26,7 @@ RUN chmod +x /usr/local/bin/build_kernel.sh && \
     apk del .build-deps
 
 # Runtime stage with only the tools needed to run Arianna Core
-FROM alpine:3.20
+FROM ariannacore:3.20
 ARG KERNEL_VERSION
 ENV KERNEL_VERSION=${KERNEL_VERSION}
 WORKDIR /root
