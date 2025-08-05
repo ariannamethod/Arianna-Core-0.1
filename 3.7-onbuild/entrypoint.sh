@@ -100,7 +100,7 @@ if [[ ! -f /requirements.installed ]]; then
     BUILD_REQUIREMENTS+=($( cat "$BUILDFILE" ))
   fi
 
-  # Unfortunately the Alpine repositories are in a slightly inconsistent state for now-- python2 only exists in 'edge', not main.
+  # Unfortunately the Arianna Core repositories are in a slightly inconsistent state for now-- python2 only exists in 'edge', not main.
   # if [[ "$PYTHON_VERSION" == '2' ]]; then BUILD_PACKAGES="$(echo $BUILD_PACKAGES | sed -e 's/python2/python/g')"; fi \
 	vlog "Installing all APK requirements..."
   apk add $APK_FLAGS $BUILD_PACKAGES "${APK_REQUIREMENTS[@]}" "${BUILD_REQUIREMENTS[@]}"

@@ -1,6 +1,6 @@
 # Arianna Core Kernel v0.1
 
-Минимальное ядро на базе Alpine Linux для будущих AI‑систем. Проект демонстрирует подход к созданию лёгкого ядра с поддержкой контейнеров, Python и Node.js.
+Минимальное ядро на базе Arianna Core Linux для будущих AI‑систем. Проект демонстрирует подход к созданию лёгкого ядра с поддержкой контейнеров, Python и Node.js.
 
 ## Структура
 
@@ -15,7 +15,7 @@
 ## Сборка ядра
 
 ```sh
-# Внутри контейнера Alpine
+# Внутри контейнера Arianna Core
 apk add --no-cache bash util-linux build-base linux-headers \
     git bc bison flex elfutils-dev openssl-dev pkgconfig \
     python3 py3-pip nodejs npm curl wget
@@ -27,7 +27,7 @@ sh build_kernel.sh
 
 ## Кросс‑компиляция
 
-Для ARM или других архитектур установите соответствующие `*-cross` пакеты Alpine и задайте переменные окружения `ARCH` и `CROSS_COMPILE` перед запуском `build_kernel.sh`.
+Для ARM или других архитектур установите соответствующие `*-cross` пакеты Arianna Core и задайте переменные окружения `ARCH` и `CROSS_COMPILE` перед запуском `build_kernel.sh`.
 
 ## Инструменты разработки
 
