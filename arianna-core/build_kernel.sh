@@ -1,11 +1,11 @@
 #!/bin/sh
-set -e
+set -euo pipefail
 # RU: Скрипт сборки ядра Arianna Core
 # Требуемые пакеты: git build-base bc bison flex elfutils-dev openssl-dev linux-headers
 
 KERNEL_VERSION=${KERNEL_VERSION:-6.6.32}
 
-apk add --no-cache git build-base bc bison flex elfutils-dev openssl-dev linux-headers wget
+apk add --no-cache --virtual .build-deps git build-base bc bison flex elfutils-dev openssl-dev linux-headers wget
 
 if [ ! -d linux-$KERNEL_VERSION ]; then
     wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-$KERNEL_VERSION.tar.xz
@@ -20,6 +20,7 @@ make olddefconfig
 # RU: Сборка
 make -j"$(nproc)"
 make modules_install INSTALL_MOD_PATH=../modules
+apk del .build-deps
 
 mkdir -p ../core/boot
 cp arch/x86/boot/bzImage ../core/boot/vmlinuz-$KERNEL_VERSION
