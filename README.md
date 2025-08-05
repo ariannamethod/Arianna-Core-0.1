@@ -1,39 +1,53 @@
-Arianna Core — минимальное ядро семейства Linux, ориентированное на модульность и прозрачность. Система поставляется с базовыми утилитами и предоставляет чистую платформу для экспериментов с пользовательскими пространствами.
+Arianna Core is a minimal Linux-family kernel focused on modularity and transparency. The system ships with basic utilities and provides a clean platform for experiments with user spaces.
 
-Проект возник как база для исследовательских AI‑систем, которым требуется управляемая среда с предсказуемым поведением. Arianna Core служит отправной точкой для построения комплексных решений без излишней нагрузки.
+The project arose as a base for research AI systems that require a controlled environment with predictable behavior. Arianna Core serves as a starting point for building complex solutions without unnecessary overhead.
 
-Основой дизайна Arianna Core является упрощённость: только наиболее необходимые компоненты ядра и пользовательского пространства. Это обеспечивает быстрый старт, низкое потребление ресурсов и лёгкую поддержку.
+The foundation of Arianna Core's design is simplicity: only the most necessary kernel and userland components. This ensures a fast start, low resource consumption, and easy maintenance.
 
-Ядро поддерживает современный планировщик процессов, управление памятью и подсистемы безопасности Linux. Модули включаются по мере необходимости, что снижает поверхность атаки и повышает надёжность.
+The kernel supports a modern process scheduler, memory management, and Linux security subsystems. Modules are included as needed, reducing the attack surface and improving reliability.
 
-Контейнеризация встроена на уровне cgroups и namespaces, поэтому Arianna Core легко работает с Docker и другими менеджерами. Это позволяет разворачивать изолированные сервисы и приложения с минимальными накладными расходами.
+Containerization is integrated at the cgroups and namespaces level, so Arianna Core works smoothly with Docker and other managers. This allows isolated services and applications to be deployed with minimal overhead.
 
-Интерфейс Python включён в базовую поставку, что упрощает написание скриптов автоматизации и прототипов. Для работы доступны ключевые библиотеки и возможность установки дополнительных модулей через стандартный менеджер пакетов.
+The Python interface is included in the base distribution, simplifying automation scripting and prototyping. Key libraries are available, and additional modules can be installed through the standard package manager.
 
-Поддержка Node.js реализована через лёгкое окружение, пригодное для запуска серверных скриптов и утилит командной строки. Это делает Arianna Core удобной платформой для гибридных проектов на JavaScript и Python.
+Node.js support is provided through a lightweight environment suitable for running server scripts and command-line utilities. This makes Arianna Core a convenient platform for hybrid JavaScript and Python projects.
 
-Архитектура системы предполагает чёткое разделение между системными компонентами и пользовательскими приложениями. Каталоги /arianna_core и /usr/bin содержат только критически важные файлы, что облегчает аудит и обслуживание.
+The system architecture maintains a clear separation between system components and user applications. The /arianna_core and /usr/bin directories contain only critical files, easing auditing and maintenance.
 
-Файловая иерархия проекта компактна: в /core находятся собранное ядро и модули, а в /arianna_core/cmd располагаются пользовательские скрипты. Такой подход позволяет быстро локализовать изменения и отслеживать зависимости.
+The project's file hierarchy is compact: /core holds the compiled kernel and modules, while /arianna_core/cmd contains user scripts. This approach allows quick localization of changes and tracking of dependencies.
 
-Процесс сборки основан на Make и скрипте build_kernel.sh, который управляет компиляцией и установкой модулей. Все настройки ядра хранятся в kernel.config и могут быть адаптированы под конкретные задачи.
+The build process is based on Make and the build_kernel.sh script, which manages compilation and module installation. All kernel settings are stored in kernel.config and can be adapted to specific tasks.
 
-Перед установкой подготовьте окружение с util-linux, build-base, linux-headers и другими базовыми пакетами. Наличие Git, Python и Node.js требуется для дальнейшей разработки и тестирования.
+Before installation, prepare an environment with util-linux, build-base, linux-headers, and other basic packages. Git, Python, and Node.js are required for further development and testing.
 
-Установка выполняется в несколько шагов: клонирование репозитория, запуск build_kernel.sh и загрузка полученного образа. Скрипт автоматически собирает ядро, подготавливает initramfs и предлагает тестовый запуск в QEMU.
+Installation is performed in several steps: clone the repository, run build_kernel.sh, and load the resulting image. The script automatically builds the kernel, prepares initramfs, and offers a test run in QEMU.
 
-После установки доступны дополнительные настройки через kernel.config и встроенные утилиты. Вы можете добавлять драйверы, включать поддержку файловых систем и изменять параметры сетевого стека.
+After installation, additional tuning is available via kernel.config and built-in utilities. You can add drivers, enable filesystem support, and modify network stack parameters.
 
-Процесс загрузки использует лёгкий init, который запускает системные службы и пользовательские сценарии. Логи ядра записываются в /arianna_core/log, что упрощает анализ и диагностику.
+The boot process uses a lightweight init that launches system services and user scripts. Kernel logs are recorded in /arianna_core/log, simplifying analysis and diagnostics.
 
-Сеть конфигурируется через стандартные инструменты Linux, включая ip, ifconfig и встроенные демоны. Arianna Core поддерживает статические и динамические конфигурации, а также туннельные интерфейсы.
+Networking is configured using standard Linux tools, including ip, ifconfig, and built-in daemons. Arianna Core supports static and dynamic configurations, as well as tunnel interfaces.
 
-Для кросс‑компиляции используются пакеты cross и переменные окружения ARCH и CROSS_COMPILE. Это позволяет собирать ядро для ARM или других архитектур из одной и той же рабочей среды.
+For cross-compilation, use cross packages and the ARCH and CROSS_COMPILE environment variables. This allows building the kernel for ARM or other architectures from the same workspace.
 
-Отладка ядра возможна через встроенный логгер, поддержку gdb и запуск в QEMU с параметрами debug. Пользовательские скрипты могут расширять функциональность мониторинга и отправлять метрики во внешние системы.
+Kernel debugging is possible through the built-in logger, gdb support, and running QEMU with debug parameters. Custom scripts can extend monitoring functionality and send metrics to external systems.
 
-Разработка приветствует внешний вклад: создавайте ветки, присылайте pull‑request и описывайте изменения. Стиль кода и структура репозитория поддерживаются максимально простыми, чтобы облегчить ревью.
+Development welcomes external contributions: create branches, submit pull requests, and describe your changes. Code style and repository structure are kept as simple as possible to ease review.
 
-В дальнейшем планируется расширить поддержку аппаратных платформ, добавить интеграцию с Rust и улучшить систему обновлений. Сообщество может предлагать новые функции или оптимизации через issues.
+Future plans include expanding hardware platform support, integrating Rust, and improving the update system. The community can propose new features or optimizations through issues.
 
-Arianna Core распространяется под лицензией MIT, что позволяет свободно использовать и модифицировать код. Документация и примеры предоставляются без гарантий, но команда стремится к стабильности и прозрачности.
+Arianna Core is distributed under the MIT license, allowing free use and modification of the code. Documentation and examples are provided without warranty, but the team strives for stability and transparency.
+
+## Science and Mathematics
+
+Physics demonstrates elegant relationships such as Newton's second law, $F = ma$, connecting force, mass, and acceleration.
+
+Einstein's theory of relativity shows that mass and energy are equivalent through the famous equation $E = mc^2$.
+
+Calculus provides tools for measuring change; for example, the definite integral $\int_0^1 x^2 dx = \tfrac{1}{3}$ describes the area under a parabola.
+
+Complex analysis reveals the beauty of Euler's identity: $e^{i\pi} + 1 = 0$, uniting fundamental constants.
+
+Geometry relies on relationships like the Pythagorean theorem, $a^2 + b^2 = c^2$, which holds in every right triangle.
+
+Probability theory models randomness using the normal distribution $f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-(x-\mu)^2/(2\sigma^2)}$.
