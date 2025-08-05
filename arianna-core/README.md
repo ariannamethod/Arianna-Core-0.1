@@ -1,21 +1,21 @@
 # Arianna Core Kernel v0.1
 
-Минимальное ядро на базе Arianna Core Linux для будущих AI‑систем. Проект демонстрирует подход к созданию лёгкого ядра с поддержкой контейнеров, Python и Node.js.
+Minimal kernel on top of Arianna Core Linux for future AI systems. The project showcases a lightweight kernel with container, Python, and Node.js support.
 
-## Структура
+## Structure
 
 ```
-/core            — собранное ядро и модули
+/core            — compiled kernel and modules
 /arianna_core
-  └── cmd       — пользовательские скрипты (Python/Node)
-/usr/bin        — минимально необходимые утилиты
-/etc, /lib      — чистые конфиги и библиотеки
+  └── cmd       — monolithic Python utility
+/usr/bin        — essential userland tools
+/etc, /lib      — clean configs and libraries
 ```
 
-## Сборка ядра
+## Kernel build
 
 ```sh
-# Внутри контейнера Arianna Core
+# Inside the Arianna Core container
 apk add --no-cache bash util-linux build-base linux-headers \
     git bc bison flex elfutils-dev openssl-dev pkgconfig \
     python3 py3-pip nodejs npm curl wget
@@ -23,39 +23,38 @@ apk add --no-cache bash util-linux build-base linux-headers \
 sh build_kernel.sh
 ```
 
-После сборки ядро располагается в `core/boot`. Скрипт пробует автозапуск через `qemu-system-x86_64` при наличии `initramfs.img`.
+After compilation the kernel resides in `core/boot`. The script attempts an automatic run via `qemu-system-x86_64` when `initramfs.img` is available.
 
-## Кросс‑компиляция
+## Cross-compilation
 
-Для ARM или других архитектур установите соответствующие `*-cross` пакеты Arianna Core и задайте переменные окружения `ARCH` и `CROSS_COMPILE` перед запуском `build_kernel.sh`.
+For ARM or other architectures install the appropriate `*-cross` packages and set `ARCH` and `CROSS_COMPILE` before running `build_kernel.sh`.
 
-## Инструменты разработки
+## Development tools
 
-Обязательные пакеты: `bash`, `busybox`, `util-linux`, `coreutils`, `build-base`, `linux-headers`, `python3`, `nodejs`, `npm`, `pkgconfig`.
+Required packages: `bash`, `busybox`, `util-linux`, `coreutils`, `build-base`, `linux-headers`, `python3`, `nodejs`, `npm`, `pkgconfig`.
 
-Опциональные: `nano`, `vim`, `curl`, `wget`, `git`, `qemu-system-x86_64`.
+Optional: `nano`, `vim`, `curl`, `wget`, `git`, `qemu-system-x86_64`.
 
-## API / CLI
+## CLI
 
-* `ariannactl.js` — Node CLI для запуска сервисов и монтирования томов.
-* `health_monitor.py` — пишет отчёты о CPU, памяти и диске в `/arianna_core/log/health.json`.
+* `arianna.py` — unified tool that can mount devices, start services, and record health metrics to `/arianna_core/log/health.json`.
 
-Добавьте `/arianna_core/cmd` в `PYTHONPATH` и `NODE_PATH`, чтобы расширять функциональность и подключать свои агенты.
+Add `/arianna_core/cmd` to `PYTHONPATH` to extend functionality and plug in custom agents.
 
-## Hooks и события
+## Hooks and events
 
-В будущих версиях можно подписываться на события ядра через `netlink`, `dbus` или файловые наблюдатели. Скрипты в `cmd` могут реагировать на новые логи или подключения, реализуя интерактивные AI‑агенты.
+Future versions may subscribe to kernel events through `netlink`, `dbus`, or file watchers. Scripts in `cmd` can react to logs or connections, enabling interactive AI agents.
 
-## Расширение
+## Extension
 
-* Для добавления нового драйвера — активируйте нужный `CONFIG_` в `kernel.config` и пересоберите.
-* Для поддержки других языков (Rust, Go) установите соответствующие компиляторы и добавьте их в образ.
-* Поддержка shared libraries обеспечивается `pkgconfig` и `build-base`.
+* To add a driver enable the proper `CONFIG_` flag in `kernel.config` and rebuild.
+* Install compilers for other languages (Rust, Go) and include them in the image.
+* Shared library support is provided by `pkgconfig` and `build-base`.
 
 ## Dockerfile
 
-`Dockerfile` в этом каталоге создаёт воспроизводимую среду сборки, пригодную для запуска в Railway или на любом сервере.
+The `Dockerfile` here creates a reproducible build environment for Railway or any server.
 
-## Загрузка образа
+## Bootable image
 
-Результат сборки можно упаковать в `tar.gz` или создать ISO/IMG средствами `grub-mkrescue` и записать на флешку.
+The build output can be packed into `tar.gz` or an ISO/IMG via `grub-mkrescue` and flashed to a USB drive.
