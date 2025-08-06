@@ -1,53 +1,92 @@
-Arianna Core is a minimal Linux-family kernel focused on modularity and transparency. The system ships with basic utilities and provides a clean platform for experiments with user spaces.
+# Arianna Core (Arianna Linux)
 
-The project arose as a base for research AI systems that require a controlled environment with predictable behavior. Arianna Core serves as a starting point for building complex solutions without unnecessary overhead.
+**Arianna Core** is a compact Linux-family kernel engineered for modularity, transparency, and efficient research workflows.  
+It provides a lightweight foundation for building AI-driven systems and controlled user spaces, while maintaining clarity in both architecture and usage.
 
-The foundation of Arianna Core's design is simplicity: only the most necessary kernel and userland components. This ensures a fast start, low resource consumption, and easy maintenance.
+## Overview
 
-The kernel supports a modern process scheduler, memory management, and Linux security subsystems. Modules are included as needed, reducing the attack surface and improving reliability.
+Arianna Core was created as a research baseline for AI environments that demand predictable behavior and minimal overhead.  
+By focusing only on essential kernel and userland components, the system ensures fast boot times, low resource consumption, and straightforward maintenance.
 
-Containerization is integrated at the cgroups and namespaces level, so Arianna Core works smoothly with Docker and other managers. This allows isolated services and applications to be deployed with minimal overhead.
+- **Modern process scheduler, memory management, and Linux security subsystems** are included.
+- Modules are loaded as needed, keeping the attack surface small and reliability high.
 
-The Python interface is included in the base distribution, simplifying automation scripting and prototyping. Key libraries are available, and additional modules can be installed through the standard package manager.
+## Features
 
-Node.js support is provided through a lightweight environment suitable for running server scripts and command-line utilities. This makes Arianna Core a convenient platform for hybrid JavaScript and Python projects.
+- **Containerization**: Built-in support for cgroups and namespaces enables seamless operation with Docker and other container managers. This makes isolated deployments trivial and resource-efficient.
+- **Python interface**: Pre-installed Python and key libraries simplify automation and rapid prototyping. Additional packages can be managed with the standard package manager.
+- **Node.js support**: Lightweight Node.js environment for running server-side scripts and CLI tools, perfect for hybrid Python/JS projects.
+- **Clear file hierarchy**:  
+  - `/core`: compiled kernel and modules  
+  - `/arianna_core/cmd`: user scripts  
+  - `/usr/bin`: only essential binaries  
+  This structure simplifies updates, auditing, and troubleshooting.
+- **Easy build and configuration**:  
+  - Uses `Make` and `build_kernel.sh` for compilation and module installation.  
+  - Kernel settings are centralized in `kernel.config` for quick adaptation.
 
-The system architecture maintains a clear separation between system components and user applications. The /arianna_core and /usr/bin directories contain only critical files, easing auditing and maintenance.
+## Installation
 
-The project's file hierarchy is compact: /core holds the compiled kernel and modules, while /arianna_core/cmd contains user scripts. This approach allows quick localization of changes and tracking of dependencies.
+1. **Prepare the environment**:  
+   Install `util-linux`, `build-base`, `linux-headers`, plus `git`, `python`, and `nodejs`.
+2. **Clone the repository**.
+3. **Build**:  
+   Run `build_kernel.sh` to compile the kernel, set up modules, and prepare `initramfs`.
+4. **Test**:  
+   The script offers test boot in QEMU.
+5. **Tune**:  
+   Further configuration is done via `kernel.config` and provided utilities. Add drivers, enable filesystems, adjust network stack, etc.
 
-The build process is based on Make and the build_kernel.sh script, which manages compilation and module installation. All kernel settings are stored in kernel.config and can be adapted to specific tasks.
+## Boot and Logging
 
-Before installation, prepare an environment with util-linux, build-base, linux-headers, and other basic packages. Git, Python, and Node.js are required for further development and testing.
+- Boot uses a minimal init to launch system services and user scripts.
+- Kernel logs are stored in `/arianna_core/log` for easy diagnostics.
 
-Installation is performed in several steps: clone the repository, run build_kernel.sh, and load the resulting image. The script automatically builds the kernel, prepares initramfs, and offers a test run in QEMU.
+## Networking
 
-After installation, additional tuning is available via kernel.config and built-in utilities. You can add drivers, enable filesystem support, and modify network stack parameters.
+- Standard Linux networking tools (`ip`, `ifconfig`, built-in daemons) for configuration.
+- Supports both static/dynamic IPs and tunnel interfaces.
 
-The boot process uses a lightweight init that launches system services and user scripts. Kernel logs are recorded in /arianna_core/log, simplifying analysis and diagnostics.
+## Development
 
-Networking is configured using standard Linux tools, including ip, ifconfig, and built-in daemons. Arianna Core supports static and dynamic configurations, as well as tunnel interfaces.
+- **Cross-compilation**: Use cross packages and set `ARCH` and `CROSS_COMPILE` as needed (e.g., for ARM).
+- **Debugging**: Integrated logger, gdb support, and QEMU debug flags are available. Custom monitoring and metric scripts can be added.
+- **Contribution**: External contributions are welcome — branch, PR, describe your changes. Code style and repo structure are kept intentionally simple.
 
-For cross-compilation, use cross packages and the ARCH and CROSS_COMPILE environment variables. This allows building the kernel for ARM or other architectures from the same workspace.
+## Future Roadmap
 
-Kernel debugging is possible through the built-in logger, gdb support, and running QEMU with debug parameters. Custom scripts can extend monitoring functionality and send metrics to external systems.
+- Expanding hardware/platform support
+- Native Rust integration
+- Smarter update and patch system
+- Community-driven feature proposals and optimizations
 
-Development welcomes external contributions: create branches, submit pull requests, and describe your changes. Code style and repository structure are kept as simple as possible to ease review.
+## Licensing
 
-Future plans include expanding hardware platform support, integrating Rust, and improving the update system. The community can propose new features or optimizations through issues.
+Arianna Core is released under the MIT license — open for any use or modification.  
+Docs and examples come as-is, but the team strives for clarity, stability, and transparent development.
 
-Arianna Core is distributed under the MIT license, allowing free use and modification of the code. Documentation and examples are provided without warranty, but the team strives for stability and transparency.
+---
 
 ## Science and Mathematics
 
-Physics demonstrates elegant relationships such as Newton's second law, $F = ma$, connecting force, mass, and acceleration.
+Physics demonstrates elegant relationships, e.g. **Newton's second law**:  
+$F = ma$ (force, mass, acceleration)
 
-Einstein's theory of relativity shows that mass and energy are equivalent through the famous equation $E = mc^2$.
+Einstein's theory of relativity equates mass and energy:  
+$E = mc^2$
 
-Calculus provides tools for measuring change; for example, the definite integral $\int_0^1 x^2 dx = \tfrac{1}{3}$ describes the area under a parabola.
+Calculus tools for change, e.g.  
+$\int_0^1 x^2 dx = \tfrac{1}{3}$ (area under a parabola)
 
-Complex analysis reveals the beauty of Euler's identity: $e^{i\pi} + 1 = 0$, uniting fundamental constants.
+Complex analysis reveals the beauty of **Euler’s identity**:  
+$e^{i\pi} + 1 = 0$
 
-Geometry relies on relationships like the Pythagorean theorem, $a^2 + b^2 = c^2$, which holds in every right triangle.
+Geometry relies on the **Pythagorean theorem**:  
+$a^2 + b^2 = c^2$
 
-Probability theory models randomness using the normal distribution $f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-(x-\mu)^2/(2\sigma^2)}$.
+Probability models randomness:  
+$f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-(x-\mu)^2/(2\sigma^2)}$ (normal distribution)
+
+---
+
+*For documentation, usage, and troubleshooting, see included examples or open an issue.*
